@@ -22,6 +22,13 @@ jest.mock('../utilities', () => ({
   getTableHeadingsBySelector: jest.fn(),
 }));
 
+jest.mock('../../../utilities/debounce', () => ({
+  ...jest.requireActual('../../../utilities/debounce'),
+  debounce: (callback: () => void) => () => {
+    callback();
+  },
+}));
+
 const mockTableItems = [
   {
     id: 'item-1',

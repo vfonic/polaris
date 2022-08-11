@@ -161,10 +161,7 @@ describe('<Checkbox />', () => {
             rowProps: {position: 1},
           });
 
-          expect(setRootPropertySpy).not.toHaveBeenLastCalledWith(
-            '--pc-checkbox-offset',
-            '0px',
-          );
+          expect(setRootPropertySpy).not.toHaveBeenCalled();
         });
 
         it('does not update `--pc-checkbox-offset` custom property on resize when position is above 1', () => {
@@ -178,10 +175,7 @@ describe('<Checkbox />', () => {
             window.dispatchEvent(new Event('resize'));
           });
 
-          expect(setRootPropertySpy).not.toHaveBeenLastCalledWith(
-            '--pc-checkbox-offset',
-            '200px',
-          );
+          expect(setRootPropertySpy).not.toHaveBeenCalled();
         });
       });
 

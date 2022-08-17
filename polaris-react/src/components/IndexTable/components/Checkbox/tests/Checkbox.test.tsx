@@ -155,7 +155,7 @@ describe('<Checkbox />', () => {
           );
         });
 
-        it('does not set sets `--pc-checkbox-offset` custom property when position is above 1', () => {
+        it('does not set `--pc-checkbox-offset` custom property when position is above 1', () => {
           mountWithTable(<Checkbox />, {
             ...defaultTableProps,
             rowProps: {position: 1},

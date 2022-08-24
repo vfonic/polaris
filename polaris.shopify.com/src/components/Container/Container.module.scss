@@ -1,5 +1,5 @@
-@import "../../styles/variables.scss";
-@import "../../styles/fonts.scss";
+@import '../../styles/variables.scss';
+@import '../../styles/fonts.scss';
 
 .Container {
   margin-left: auto;
@@ -8,7 +8,7 @@
   box-sizing: content-box;
   padding: 0 4rem;
 
-  @media screen and (max-width: $breakpointTablet) {
+  @media screen and (max-width: $breakpointDesktop) {
     padding: 0 1.25rem;
   }
 }

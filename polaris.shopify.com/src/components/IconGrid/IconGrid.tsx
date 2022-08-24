@@ -1,16 +1,16 @@
-import Image from "../Image";
-import { className } from "../../utils/various";
-import { SearchResultItem } from "../../types";
-import styles from "./IconGrid.module.scss";
-import { Icon } from "@shopify/polaris-icons/metadata";
-import Link from "next/link";
+import Image from '../Image';
+import {useGlobalSearchResult} from '../GlobalSearch/GlobalSearch';
+import {className} from '../../utils/various';
+import styles from './IconGrid.module.scss';
+import {Icon} from '@shopify/polaris-icons/metadata';
+import Link from 'next/link';
 
 interface IconGridProps {
   title?: string;
   children: React.ReactNode;
 }
 
-function IconGrid({ title, children }: IconGridProps) {
+function IconGrid({title, children}: IconGridProps) {
   return (
     <>
       {title ? <h2 className={styles.SectionHeading}>{title}</h2> : null}
@@ -21,27 +21,24 @@ function IconGrid({ title, children }: IconGridProps) {
   );
 }
 
-interface IconGridItemProps extends SearchResultItem {
+interface IconGridItemProps {
   icon: Icon;
   query?: string;
   activeIcon?: string;
 }
 
-function IconGridItem({
-  icon,
-  activeIcon,
-  query,
-  searchResultData,
-}: IconGridItemProps) {
-  const { id, name, description } = icon;
+function IconGridItem({icon, activeIcon, query}: IconGridItemProps) {
+  const {id, name, description} = icon;
+  const searchAttributes = useGlobalSearchResult();
+
   return (
     <li key={id}>
       <Link
         href={{
-          pathname: "/icons",
+          pathname: '/icons',
           query: {
             icon: id,
-            ...(query === "" ? {} : { q: query }),
+            ...(query === '' ? {} : {q: query}),
           },
         }}
         scroll={false}
@@ -50,10 +47,9 @@ function IconGridItem({
           className={className(
             styles.Icon,
             activeIcon === id && styles.isSelected,
-            searchResultData?.isHighlighted && styles.isSelected
           )}
-          {...searchResultData?.itemAttributes}
           id={icon.id}
+          {...searchAttributes}
         >
           <Image
             src={`/icons/${id}.svg`}

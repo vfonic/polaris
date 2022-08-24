@@ -1,7 +1,11 @@
 import React, {useRef, useState, useEffect, useCallback, useMemo} from 'react';
-import {EnableSelectionMinor} from '@shopify/polaris-icons';
+import {
+  EnableSelectionMinor,
+  SortAscendingMajor,
+  SortDescendingMajor,
+} from '@shopify/polaris-icons';
 import {CSSTransition} from 'react-transition-group';
-import {tokens} from '@shopify/polaris-tokens';
+import {tokens, toPx, motion} from '@shopify/polaris-tokens';
 
 import {debounce} from '../../utilities/debounce';
 import {useToggle} from '../../utilities/use-toggle';
@@ -11,12 +15,14 @@ import {Checkbox as PolarisCheckbox} from '../Checkbox';
 import {EmptySearchResult} from '../EmptySearchResult';
 // eslint-disable-next-line import/no-deprecated
 import {EventListener} from '../EventListener';
+import {Icon} from '../Icon';
 import {Stack} from '../Stack';
 import {Sticky} from '../Sticky';
 import {Spinner} from '../Spinner';
 // eslint-disable-next-line import/no-deprecated
 import {VisuallyHidden} from '../VisuallyHidden';
 import {Button} from '../Button';
+import {UnstyledButton} from '../UnstyledButton';
 import {BulkActions, BulkActionsProps} from '../BulkActions';
 import {classNames} from '../../utilities/css';
 import {
@@ -36,10 +42,13 @@ import styles from './IndexTable.scss';
 
 export interface IndexTableHeading {
   title: string;
+  id?: string;
   flush?: boolean;
   new?: boolean;
   hidden?: boolean;
 }
+
+export type IndexTableSortDirection = 'ascending' | 'descending';
 
 export interface IndexTableBaseProps {
   headings: NonEmptyArray<IndexTableHeading>;
@@ -51,6 +60,21 @@ export interface IndexTableBaseProps {
   paginatedSelectAllActionText?: string;
   lastColumnSticky?: boolean;
   selectable?: boolean;
+  /** List of booleans, which maps to whether sorting is enabled or not for each column. Defaults to false for all columns.  */
+  sortable?: boolean[];
+  /**
+   * The direction to sort the table rows on first click or keypress of a sortable column heading. Defaults to ascending.
+   * @default 'descending'
+   */
+  defaultSortDirection?: IndexTableSortDirection;
+  /** The current sorting direction. */
+  sortDirection?: IndexTableSortDirection;
+  /**
+   * The index of the heading that the table rows are sorted by.
+   */
+  sortColumnIndex?: number;
+  /** Callback fired on click or keypress of a sortable column heading. */
+  onSort?(headingIndex: number, direction: IndexTableSortDirection): void;
 }
 
 export interface TableHeadingRect {
@@ -61,7 +85,6 @@ export interface TableHeadingRect {
 const SCROLL_BAR_PADDING = 4;
 const SIXTY_FPS = 1000 / 60;
 const SCROLL_BAR_DEBOUNCE_PERIOD = 300;
-const SMALL_SCREEN_WIDTH = 458;
 
 function IndexTableBase({
   headings,
@@ -72,6 +95,11 @@ function IndexTableBase({
   sort,
   paginatedSelectAllActionText,
   lastColumnSticky = false,
+  sortable,
+  sortDirection,
+  defaultSortDirection = 'descending',
+  sortColumnIndex,
+  onSort,
   ...restProps
 }: IndexTableBaseProps) {
   const {
@@ -105,6 +133,7 @@ function IndexTableBase({
   const [stickyWrapper, setStickyWrapper] = useState<HTMLElement | null>(null);
   const [hideScrollContainer, setHideScrollContainer] =
     useState<boolean>(false);
+  const [smallScreen, setSmallScreen] = useState(isBreakpointsXS());
 
   const tableHeadings = useRef<HTMLElement[]>([]);
   const stickyTableHeadings = useRef<HTMLElement[]>([]);
@@ -187,7 +216,7 @@ function IndexTableBase({
           // update sticky header min-widths
           stickyTableHeadings.current.forEach((heading, index) => {
             let minWidth = 0;
-            if (index === 0 && (!isSmallScreen() || !selectable)) {
+            if (index === 0 && (!isBreakpointsXS() || !selectable)) {
               minWidth = calculateFirstHeaderOffset();
             } else if (selectable && tableHeadingRects.current.length > index) {
               minWidth = tableHeadingRects.current[index]?.offsetWidth || 0;
@@ -251,6 +280,10 @@ function IndexTableBase({
     handleCanScrollRight();
   }, [handleCanScrollRight]);
 
+  const handleIsSmallScreen = useCallback(() => {
+    setSmallScreen(smallScreen);
+  }, [smallScreen]);
+
   const handleResize = useCallback(() => {
     // hide the scrollbar when resizing
     scrollBarElement.current?.style.setProperty(
@@ -261,7 +294,13 @@ function IndexTableBase({
     resizeTableHeadings();
     debounceResizeTableScrollbar();
     handleCanScrollRight();
-  }, [debounceResizeTableScrollbar, resizeTableHeadings, handleCanScrollRight]);
+    handleIsSmallScreen();
+  }, [
+    resizeTableHeadings,
+    debounceResizeTableScrollbar,
+    handleCanScrollRight,
+    handleIsSmallScreen,
+  ]);
 
   const handleScrollContainerScroll = useCallback(
     (canScrollLeft, canScrollRight) => {
@@ -375,7 +414,7 @@ function IndexTableBase({
 
         {selectable && (
           <div className={styles['StickyTableHeading-second-scrolling']}>
-            {renderHeadingContent(headings[0])}
+            {renderHeadingContent(headings[0], 0)}
           </div>
         )}
 
@@ -384,7 +423,7 @@ function IndexTableBase({
             className={styles.FirstStickyHeaderElement}
             ref={firstStickyHeaderElement}
           >
-            {renderHeadingContent(headings[0])}
+            {renderHeadingContent(headings[0], 0)}
           </div>
         )}
       </Stack>
@@ -417,7 +456,7 @@ function IndexTableBase({
     <CSSTransition
       in={loading}
       classNames={loadingTransitionClassNames}
-      timeout={parseInt(tokens.motion['duration-100'].value, 10)}
+      timeout={parseInt(motion['duration-100'], 10)}
       appear
       unmountOnExit
     >
@@ -468,7 +507,7 @@ function IndexTableBase({
             <div className={bulkActionClassNames} data-condensed={condensed}>
               {loadingMarkup}
               <BulkActions
-                smallScreen={condensed}
+                smallScreen={smallScreen}
                 label={i18n.translate('Polaris.IndexTable.selected', {
                   selectedItemsCount: selectedItemsCountLabel,
                 })}
@@ -646,6 +685,8 @@ function IndexTableBase({
     const isLast = index === headings.length - 1;
     const headingContentClassName = classNames(
       styles.TableHeading,
+      sortable?.some((value) => value === true) &&
+        styles['TableHeading-sortable'],
       isSecond && styles['TableHeading-second'],
       isLast && !heading.hidden && styles['TableHeading-last'],
       !selectable && styles['TableHeading-unselectable'],
@@ -667,7 +708,7 @@ function IndexTableBase({
         data-index-table-heading
         style={stickyPositioningStyle}
       >
-        {renderHeadingContent(heading)}
+        {renderHeadingContent(heading, index)}
       </th>
     );
 
@@ -708,7 +749,14 @@ function IndexTableBase({
     );
   }
 
-  function renderHeadingContent(heading: IndexTableHeading) {
+  function handleSortHeadingClick(
+    index: number,
+    direction: IndexTableSortDirection,
+  ) {
+    onSort?.(index, direction);
+  }
+
+  function renderHeadingContent(heading: IndexTableHeading, index: number) {
     let headingContent;
 
     if (heading.new) {
@@ -725,6 +773,49 @@ function IndexTableBase({
     } else {
       headingContent = heading.title;
     }
+    if (sortable?.[index]) {
+      const isCurrentlySorted = index === sortColumnIndex;
+      const isAscending = sortDirection === 'ascending';
+      let newDirection: IndexTableSortDirection = defaultSortDirection;
+      let source =
+        defaultSortDirection === 'ascending'
+          ? SortAscendingMajor
+          : SortDescendingMajor;
+      if (isCurrentlySorted) {
+        newDirection = isAscending ? 'descending' : 'ascending';
+        source =
+          sortDirection === 'ascending'
+            ? SortAscendingMajor
+            : SortDescendingMajor;
+      }
+
+      const sortAccessibilityLabel = i18n.translate(
+        'Polaris.IndexTable.sortAccessibilityLabel',
+        {direction: newDirection},
+      );
+
+      const iconMarkup = (
+        <span
+          className={classNames(
+            styles.TableHeadingSortIcon,
+            isCurrentlySorted && styles['TableHeadingSortIcon-visible'],
+          )}
+        >
+          <Icon source={source} accessibilityLabel={sortAccessibilityLabel} />
+        </span>
+      );
+
+      return (
+        <UnstyledButton
+          onClick={() => handleSortHeadingClick(index, newDirection)}
+          className={styles.TableHeadingSortButton}
+        >
+          {iconMarkup}
+
+          {headingContent}
+        </UnstyledButton>
+      );
+    }
     return headingContent;
   }
 
@@ -739,7 +830,7 @@ function IndexTableBase({
         ? {minWidth: tableHeadingRects.current[position].offsetWidth}
         : undefined;
 
-    const headingContent = renderHeadingContent(heading);
+    const headingContent = renderHeadingContent(heading, index);
     const stickyHeadingClassName = classNames(
       styles.TableHeading,
       index === 0 && styles['StickyTableHeading-second'],
@@ -787,10 +878,11 @@ function IndexTableBase({
   }
 }
 
-const isSmallScreen = () => {
+const isBreakpointsXS = () => {
   return typeof window === 'undefined'
     ? false
-    : window.innerWidth < SMALL_SCREEN_WIDTH;
+    : window.innerWidth <
+        parseFloat(toPx(tokens.breakpoints['breakpoints-sm']) ?? '');
 };
 
 export interface IndexTableProps

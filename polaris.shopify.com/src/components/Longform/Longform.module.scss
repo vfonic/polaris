@@ -1,6 +1,6 @@
-@import "../../styles/fonts.scss";
-@import "../../styles/mixins.scss";
-@import "../../styles/variables.scss";
+@import '../../styles/fonts.scss';
+@import '../../styles/mixins.scss';
+@import '../../styles/variables.scss';
 
 .Longform {
   img {
@@ -25,7 +25,7 @@
 
   h1 {
     @include heading-1;
-    margin-bottom: 2.5rem;
+    margin-bottom: 2rem;
 
     @media screen and (max-width: $breakpointMobile) {
       margin-bottom: 1.5rem;
@@ -97,7 +97,7 @@
       position: relative;
       counter-increment: list;
       &::before {
-        content: counter(list) ".";
+        content: counter(list) '.';
         display: block;
         position: absolute;
         left: 0;
@@ -134,20 +134,13 @@
     display: none;
   }
 
-  pre {
+  p code {
     font-family: var(--font-family-mono);
-    font-size: var(--font-size-100);
-    padding: 1rem;
-    background: #222;
-    color: #fff;
-    border-radius: var(--border-radius-500);
-    overflow: auto;
-    white-space: pre-wrap;
-    min-width: 0;
-
-    p {
-      margin: 0;
-    }
+    font-size: 0.9em;
+    font-weight: var(--font-weight-500);
+    background: var(--surface-code-inline);
+    border-radius: var(--border-radius-300);
+    padding: 0.15rem 0.25rem;
   }
 
   .usage-list {
@@ -158,34 +151,62 @@
 
   table {
     font-size: var(--font-size-200);
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
+    border: 1px solid var(--border-color-light);
+    border-radius: 0.5rem;
+    width: 100%;
 
     th {
       font-weight: var(--font-weight-600);
       text-align: left;
-      border-bottom: var(--border);
+      background-color: var(--surface-subdued);
+
+      &:first-child {
+        border-top-left-radius: 0.5rem;
+      }
+
+      &:last-child {
+        border-top-right-radius: 0.5rem;
+      }
     }
 
     th,
     td {
-      padding: 0.125rem 1rem;
+      padding: 0.6rem .70588rem;
+      border-bottom: 1px solid var(--border-color-light);
 
       &:first-child {
-        padding-left: 0;
+        padding-left: 1.5rem;
       }
 
       &:last-child {
-        padding-right: 0;
+        padding-right: 1.5rem;
       }
-    }
 
-    th {
-      padding-bottom: 0.5rem;
+      @media screen and (min-width: $breakpointDesktop) {
+        &:first-child {
+          padding-left: 2.8rem;
+        }
+
+        &:last-child {
+          padding-right: 2.8rem;
+        }
+      }
+
     }
 
     tbody {
-      tr:first-child td {
-        padding-top: 0.5rem;
+      tr:last-child td {
+        border-bottom: none;
+      }
+
+      tr:last-child td:first-child {
+        border-bottom-left-radius: 0.5rem;
+      }
+
+      tr:last-child td:last-child {
+        border-bottom-right-radius: 0.5rem;
       }
     }
   }
@@ -204,7 +225,8 @@
     margin-top: 0;
     margin-bottom: 2rem;
     color: var(--text-strong);
-    font-size: var(--font-size-800);
+    font-size: var(--font-size-700);
+    font-weight: var(--font-weight-500);
     letter-spacing: var(--letter-spacing-300);
   }
 }

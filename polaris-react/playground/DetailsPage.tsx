@@ -42,6 +42,7 @@ import {
   Thumbnail,
   Toast,
   TopBar,
+  VisuallyHidden,
 } from '../src';
 
 import styles from './DetailsPage.scss';
@@ -187,7 +188,6 @@ export function DetailsPage() {
       initials="D"
       open={userMenuActive}
       onToggle={toggleUserMenuActive}
-      colorScheme="dark"
       accessibilityLabel="User menu"
     />
   );
@@ -460,12 +460,16 @@ export function DetailsPage() {
   const loadingMarkup = isLoading ? <Loading /> : null;
 
   const skipToContentTarget = (
-    <a
-      href="#SkipToContent"
-      id="SkipToContentTarget"
-      ref={skipToContentRef}
-      tabIndex={-1}
-    />
+    <VisuallyHidden>
+      <a
+        href="#SkipToContent"
+        id="SkipToContentTarget"
+        ref={skipToContentRef}
+        tabIndex={-1}
+      >
+        Page content
+      </a>
+    </VisuallyHidden>
   );
 
   // ---- Description ----
@@ -490,19 +494,16 @@ export function DetailsPage() {
   const actions1 = [
     {
       content: 'Duplicate',
-      // eslint-disable-next-line no-console
       onAction: () => console.log('duplicate'),
     },
     {
       content: 'Print',
-      // eslint-disable-next-line no-console
       onAction: () => console.log('print'),
     },
   ];
   const actions2 = [
     {
       content: 'Print',
-      // eslint-disable-next-line no-console
       onAction: () => console.log('print'),
     },
   ];
@@ -560,7 +561,7 @@ export function DetailsPage() {
       titleMetadata={<Badge status="success">Success badge</Badge>}
       primaryAction={{
         content: 'Save this page',
-        // eslint-disable-next-line no-console
+
         onAction: () => console.log('save'),
       }}
       additionalMetadata="Created May 8, 2020 at 7:31 am from Developer Tools (via import)"
@@ -569,7 +570,6 @@ export function DetailsPage() {
         {
           content: 'View',
           onAction: () => {
-            // eslint-disable-next-line no-console
             console.log(previewValue);
           },
         },
@@ -578,7 +578,6 @@ export function DetailsPage() {
         {
           title: 'Promote',
           actions: [
-            // eslint-disable-next-line no-console
             {content: 'Promote', onAction: () => console.log('promote')},
           ],
         },
@@ -587,7 +586,7 @@ export function DetailsPage() {
           actions: [
             {
               content: 'Embed on a website',
-              // eslint-disable-next-line no-console
+
               onAction: () => console.log('embed'),
             },
             {

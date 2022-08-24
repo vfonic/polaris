@@ -14,23 +14,10 @@ A component README starts with metadata (in YAML), followed by the component nam
 ---
 name: ComponentName
 category: Category # for example: “Actions”
-platforms:
-  - android
-  - ios
-  - web
 keywords:
   - keywords are useful
   - for improving search results
   - in the style guide
-
-# Indicates the component takes over the entire viewport
-fullSizeExamples: false # Optional, default: false
-
-# Prevents automatic wrapping of examples with an AppProvider
-omitAppProvider: false # Optional, default: false
-
-# Hides the playground, mostly useful for components which only render in an embedded app context that don’t have a matching React source
-hidePlayground: false # Optional, default: false
 ---
 
 # ComponentName

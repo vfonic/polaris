@@ -1,14 +1,14 @@
-import React from "react";
-import { TOCItem, useTOC } from "../../utils/hooks";
-import { className, slugify } from "../../utils/various";
-import Longform from "../Longform";
-import Container from "../Container";
-import Nav, { NavItem } from "../Nav";
+import {useTOC} from '../../utils/hooks';
+import {className} from '../../utils/various';
+import Longform from '../Longform';
+import Container from '../Container';
+import Nav, {NavItem} from '../Nav';
 
-import styles from "./Layout.module.scss";
+import styles from './Layout.module.scss';
+import TOC from '../TOC';
 
 interface Props {
-  width?: "full" | "narrow";
+  width?: 'full' | 'narrow';
   navItems?: NavItem[];
   title?: string;
   showTOC?: boolean;
@@ -16,7 +16,7 @@ interface Props {
 }
 
 function Layout({
-  width = "full",
+  width = 'full',
   navItems,
   title,
   showTOC = true,
@@ -29,54 +29,28 @@ function Layout({
       className={className(
         styles.Layout,
         showTOC && styles.showTOC,
-        width === "narrow" && styles.narrow
+        width === 'narrow' && styles.narrow,
       )}
     >
       <div className={styles.Nav}>
         {navItems && <Nav navItems={navItems} />}
       </div>
 
-      <article className={styles.Main}>
-        <div className={styles.CenteredMainContent}>
-          {title && (
-            <Longform>
-              <h1>{title}</h1>
-            </Longform>
-          )}
-          <div className={styles.Post}>
-            {showTOC && <TOC items={tocItems} />}
-            <div id="main" className={styles.PostContent}>
-              {children}
-            </div>
-          </div>
-        </div>
+      <article className={styles.Post} id="main">
+        {title && (
+          <Longform>
+            <h1>{title}</h1>
+          </Longform>
+        )}
+        {children}
       </article>
+
+      {showTOC && (
+        <div className={styles.TOCWrapper}>
+          <TOC items={tocItems} />
+        </div>
+      )}
     </Container>
-  );
-}
-
-function TOC({ items }: { items: TOCItem[] }) {
-  const isNested = !!items.find((item) => item.children.length > 0);
-
-  return (
-    <div className={className(styles.TOC, isNested && styles.isNested)}>
-      <ul>
-        {items.map(({ name, children }) => (
-          <li key={name}>
-            <a href={`#${slugify(name)}`}>{name}</a>
-            {children.length > 0 && (
-              <ul>
-                {children.map((child) => (
-                  <li key={child.name}>
-                    <a href={`#${slugify(child.name)}`}>{child.name}</a>
-                  </li>
-                ))}
-              </ul>
-            )}
-          </li>
-        ))}
-      </ul>
-    </div>
   );
 }
 

@@ -34,7 +34,8 @@
     "format": "prettier . --write",
     "type-check": "tsc --build",
     "changeset": "changeset",
-    "version-packages": "changeset version",
+    "preversion-packages": "turbo run preversion",
+    "version-packages": "yarn preversion-packages && changeset version",
     "release": "turbo run build --filter=polaris.shopify.com^... && changeset publish",
     "preversion": "echo \"Error: use @changsets/cli to version packages\" && exit 1"
   },
@@ -71,6 +72,7 @@
     "rollup-plugin-node-externals": "^4.0.0",
     "size-limit": "^5.0.3",
     "stylelint": "^14.1.0",
+    "ts-node": "^10.7.0",
     "turbo": "^1.2.8",
     "typescript": "^4.6.3"
   },
@@ -79,7 +81,7 @@
     {
       "name": "polaris-react-cjs",
       "path": "polaris-react/build/cjs/index.js",
-      "limit": "205 kB"
+      "limit": "206 kB"
     },
     {
       "name": "polaris-react-esm",

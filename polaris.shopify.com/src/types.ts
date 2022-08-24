@@ -1,73 +1,55 @@
-import { TokenProperties } from "@shopify/polaris-tokens";
+import { MetadataProperties } from "@shopify/polaris-tokens";
 import { Icon } from "@shopify/polaris-icons/metadata";
 
 export type MarkdownFile = {
   frontMatter: any;
-  intro: string;
   readme: string;
 };
 
-export interface TokenPropertiesWithName extends TokenProperties {
+export interface TokenPropertiesWithName extends MetadataProperties {
   name: string;
 }
 
 export const searchResultCategories = [
-  "Foundations",
-  "Components",
-  "Tokens",
-  "Icons",
+  'foundations',
+  'components',
+  'tokens',
+  'icons',
 ] as const;
 
 export type SearchResultCategory = typeof searchResultCategories[number];
 
-interface BaseSearchResult {
+export interface SearchResult {
+  id: string;
+  category: SearchResultCategory;
   url: string;
   score: number;
+  meta: Partial<{
+    components: {
+      title: string;
+      description: string;
+      status?: Status;
+    };
+    foundations: {
+      title: string;
+      description: string;
+      icon: string;
+      category: string;
+    };
+    tokens: {
+      category: string;
+      token: TokenPropertiesWithName;
+    };
+    icons: {icon: Icon};
+  }>;
 }
-
-export interface FoundationsSearchResult extends BaseSearchResult {
-  category: "Foundations";
-  meta: {
-    title: string;
-    excerpt: string;
-  };
-}
-
-export interface ComponentsSearchResult extends BaseSearchResult {
-  category: "Components";
-  meta: {
-    name: string;
-    description: string;
-    status?: Status;
-  };
-}
-
-export interface TokensSearchResult extends BaseSearchResult {
-  category: "Tokens";
-  meta: {
-    token: TokenPropertiesWithName;
-  };
-}
-
-export interface IconsSearchResult extends BaseSearchResult {
-  category: "Icons";
-  meta: { icon: Icon };
-}
-
-export type SearchResult =
-  | FoundationsSearchResult
-  | ComponentsSearchResult
-  | TokensSearchResult
-  | IconsSearchResult;
 
 export type SearchResults = SearchResult[];
 
 export type GroupedSearchResults = {
-  Foundations: { results: FoundationsSearchResult[]; maxScore: number };
-  Components: { results: ComponentsSearchResult[]; maxScore: number };
-  Tokens: { results: TokensSearchResult[]; maxScore: number };
-  Icons: { results: IconsSearchResult[]; maxScore: number };
-};
+  category: SearchResultCategory;
+  results: SearchResult[];
+}[];
 
 export interface SearchResultItem {
   searchResultData?: {
@@ -75,7 +57,7 @@ export interface SearchResultItem {
     tabIndex: -1;
     itemAttributes: {
       id: string;
-      "data-is-active-descendant": boolean;
+      'data-is-active-descendant': boolean;
     };
     url: string;
   };
@@ -89,7 +71,7 @@ export enum Breakpoints {
 }
 
 export type Status = {
-  value: "deprecated" | "alpha" | "warning" | "information";
+  value: 'deprecated' | 'alpha' | 'warning' | 'information';
   message: string;
 };
 
@@ -102,4 +84,15 @@ export interface PropsForComponent {
     optional: boolean;
     deprecated: boolean;
   }[];
+}
+
+export interface QuickGuideRow {
+  question: string;
+  answer: string;
+}
+
+export interface QuickGuide {
+  title: string;
+  queryParam: string;
+  rows: QuickGuideRow[];
 }

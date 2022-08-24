@@ -1,40 +1,40 @@
-import React from "react";
-import Image from "next/image";
-import { useRouter } from "next/router";
-import useDarkMode from "use-dark-mode";
+import React, {useEffect} from 'react';
+import {useRouter} from 'next/router';
+import useDarkMode from 'use-dark-mode';
 
-import Header from "../Header";
-
-import styles from "./Page.module.scss";
-import SiteLaunchBanner from "../SiteLaunchBanner";
+import SiteLaunchBanner from '../SiteLaunchBanner';
+import Header from '../Header';
+import {className} from '../../utils/various';
 
 interface Props {
   children: React.ReactNode;
 }
 
-function Page({ children }: Props) {
+function Page({children}: Props) {
   const router = useRouter();
   const darkMode = useDarkMode(false);
 
-  const isPolaris = router.asPath.startsWith("/examples");
+  const isPolaris = router.asPath.startsWith('/examples');
+
+  useEffect(() => {
+    document.documentElement.style.setProperty(
+      'color-scheme',
+      darkMode.value ? 'dark' : 'light',
+    );
+  }, [darkMode.value]);
 
   return (
-    <div style={{ background: isPolaris ? "#fafafa" : "unset" }}>
+    <div
+      style={{background: isPolaris ? '#fafafa' : 'unset'}}
+      className={className(
+        !isPolaris && 'styles-for-site-but-not-polaris-examples',
+      )}
+    >
       {!isPolaris && <Header currentPath={router.asPath} darkMode={darkMode} />}
 
       {children}
 
-      {!isPolaris && (
-        <div className={styles.Footer}>
-          <Image
-            src="/shopify-logo.svg"
-            width={36}
-            height={36}
-            alt="Shopify logo"
-          />
-          <SiteLaunchBanner />
-        </div>
-      )}
+      {!isPolaris && <SiteLaunchBanner />}
     </div>
   );
 }

@@ -1,5 +1,23 @@
 # Changelog
 
+## 10.1.0
+
+### Minor Changes
+
+- [#6976](https://github.com/Shopify/polaris/pull/6976) [`ae7345f0c`](https://github.com/Shopify/polaris/commit/ae7345f0cc71cfe0290302667722dd758b0891bc) Thanks [@tylernoseworthy](https://github.com/tylernoseworthy)! - - Added a `fixedFirstColumns` prop to `DataTable` so that multiple columns can be fixed
+  - Deprecated the `DataTable` `fixedFirstColumn` prop
+
+### Patch Changes
+
+- [#7022](https://github.com/Shopify/polaris/pull/7022) [`716956df6`](https://github.com/Shopify/polaris/commit/716956df6939d86204342fb7107c81333f570517) Thanks [@QuintonC](https://github.com/QuintonC)! - Fixed visual bug for avatar shape prop
+
+* [#6993](https://github.com/Shopify/polaris/pull/6993) [`fa840e4a9`](https://github.com/Shopify/polaris/commit/fa840e4a9dc47a9afdeca0c5f4191294183a8093) Thanks [@kyledurand](https://github.com/kyledurand)! - Removed deprecation from Layout.AnnotatedSection
+
+- [#7003](https://github.com/Shopify/polaris/pull/7003) [`2b5f7d0fc`](https://github.com/Shopify/polaris/commit/2b5f7d0fc57149f27fe28d31b3618d98b057923c) Thanks [@mrcthms](https://github.com/mrcthms)! - Fix visual bug for sortable, selectable index table headings
+
+- Updated dependencies [[`bd00ef4ed`](https://github.com/Shopify/polaris/commit/bd00ef4ed5307aa07bb7fbd00ff4328179b859e1)]:
+  - @shopify/polaris-icons@6.0.0
+
 ## 10.0.0
 
 ### Major Changes

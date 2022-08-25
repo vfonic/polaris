@@ -1,5 +1,11 @@
 # Changelog
 
+## 6.0.0
+
+### Major Changes
+
+- [#7012](https://github.com/Shopify/polaris/pull/7012) [`bd00ef4ed`](https://github.com/Shopify/polaris/commit/bd00ef4ed5307aa07bb7fbd00ff4328179b859e1) Thanks [@leileu](https://github.com/leileu)! - Adding Metafields icon to polaris
+
 ## 5.4.0
 
 ### Minor Changes

@@ -1,5 +1,12 @@
 # Changelog
 
+## 0.0.11
+
+### Patch Changes
+
+- Updated dependencies [[`716956df6`](https://github.com/Shopify/polaris/commit/716956df6939d86204342fb7107c81333f570517), [`ae7345f0c`](https://github.com/Shopify/polaris/commit/ae7345f0cc71cfe0290302667722dd758b0891bc), [`fa840e4a9`](https://github.com/Shopify/polaris/commit/fa840e4a9dc47a9afdeca0c5f4191294183a8093), [`2b5f7d0fc`](https://github.com/Shopify/polaris/commit/2b5f7d0fc57149f27fe28d31b3618d98b057923c)]:
+  - @shopify/polaris@10.1.0
+
 ## 0.0.10
 
 ### Patch Changes

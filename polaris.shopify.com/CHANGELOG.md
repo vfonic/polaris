@@ -1,5 +1,21 @@
 # polaris.shopify.com
 
+## 0.14.0
+
+### Minor Changes
+
+- [#7018](https://github.com/Shopify/polaris/pull/7018) [`a8087a358`](https://github.com/Shopify/polaris/commit/a8087a358fb55599d440036c10f0fe08ed873303) Thanks [@alex-page](https://github.com/alex-page)! - Generate assets once with a seperate script
+
+* [#6934](https://github.com/Shopify/polaris/pull/6934) [`793e26f4d`](https://github.com/Shopify/polaris/commit/793e26f4d3d913c24d652e278286dd72c2fc9ef8) Thanks [@alex-page](https://github.com/alex-page)! - Use @shopify/polaris-icons instead of /icons and copy-icons
+
+### Patch Changes
+
+- [#7015](https://github.com/Shopify/polaris/pull/7015) [`e612cbccb`](https://github.com/Shopify/polaris/commit/e612cbccbad6e712d1ecec5ee37bd0bdf649f4f0) Thanks [@lgriffee](https://github.com/lgriffee)! - Update navigation column in breakpoints table for MD breakpoint
+
+- Updated dependencies [[`716956df6`](https://github.com/Shopify/polaris/commit/716956df6939d86204342fb7107c81333f570517), [`ae7345f0c`](https://github.com/Shopify/polaris/commit/ae7345f0cc71cfe0290302667722dd758b0891bc), [`bd00ef4ed`](https://github.com/Shopify/polaris/commit/bd00ef4ed5307aa07bb7fbd00ff4328179b859e1), [`fa840e4a9`](https://github.com/Shopify/polaris/commit/fa840e4a9dc47a9afdeca0c5f4191294183a8093), [`2b5f7d0fc`](https://github.com/Shopify/polaris/commit/2b5f7d0fc57149f27fe28d31b3618d98b057923c)]:
+  - @shopify/polaris@10.1.0
+  - @shopify/polaris-icons@6.0.0
+
 ## 0.13.0
 
 ### Minor Changes
